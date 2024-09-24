@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mqtt:
+    image: eclipse-mosquitto
+    container_name: mqtt-broker
+    user: "1000:996"
+    ports:
+      - "1883:1883"
+      - "8883:8883"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+      - ./mosquitto/passwd:/mosquitto/passwd
+      - /etc/letsencrypt/archive/<host_name_of_your_mqtt>:/mosquitto/certs/archive/<host_name_of_your_mqtt>
+      - /etc/letsencrypt/live/<host_name_of_your_mqtt>:/mosquitto/certs/live/<host_name_of_your_mqtt>
+      - /etc/ssl/certs:/mosquitto/certs
+    restart: unless-stopped
+
+  mysql-db:
+    image: mysql:5.7
+    container_name: mysql-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    restart: unless-stopped
