@@ -3,14 +3,16 @@ package utils
 import (
 	"crypto/tls"
 	"encoding/json"
-	"github.com/eclipse/paho.mqtt.golang"
+	"fmt"
 	"log"
 	"os"
 	"time"
+
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/joho/godotenv"
 )
 
-var batchSize = 100
+var batchSize = 500
 var deviceBuffer []AllDevice
 
 var messageHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
@@ -23,6 +25,7 @@ var messageHandler mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Messa
 	}
 
 	deviceBuffer = append(deviceBuffer, device)
+	fmt.Println(device)
 
 	if len(deviceBuffer) >= batchSize {
 		insertData()
@@ -68,7 +71,7 @@ func MqttClientInit() {
 		log.Fatal(token.Error())
 	}
 
-	topics := []string{"library/reference", "library/information_technology", "library/medical","library/filipiniana","library/publication","library/serials",}
+	topics := []string{"library/reference", "library/information_technology", "library/medical", "library/filipiniana", "library/publication", "library/serials"}
 
 	for _, topic := range topics {
 		token := mqttClient.Subscribe(topic, 2, messageHandler)
