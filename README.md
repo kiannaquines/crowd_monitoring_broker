@@ -14,5 +14,5 @@ Before running the `docker` services you must have a domain that has valid `ssl`
 2. Run docker command `docker-compose up` and `docker-compose up -d`
 3. Verify docker container is running `docker-compose ps`
 
-## Any Bugs
+## Any Bugs?
 If your encounter any issues with the script please submit a ticket.
